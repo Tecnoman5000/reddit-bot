@@ -1,7 +1,6 @@
 __author__ = 'tecnoman5000'
 
 import praw
-from sys import meta_path
 
 def voting_main(user_name):
 
@@ -17,13 +16,13 @@ def voting_main(user_name):
 			print('Previously up voted IDs found')
 			for line in post_id_file.read().splitlines():
 				post_id.append(line)
-	except FileNotFoundError as no_file_err:
+	except FileNotFoundError:
 		print('No previously up voted IDs found')
 
 	### Connect to Reddit
-	print('Connecting...')
 	r = praw.Reddit(user_agent='The bot to hoard it all') # Bot information
-	r.login('datahoardingbot', 'fuckYouC0g3c0') # bot login information
+	r.login('datahoardingbot', str(input('Bot Password: '))) # bot login information
+	print('Connecting...')
 
 	try:
 		reddit_user = r.get_redditor(user_name) # Get reddit user information
