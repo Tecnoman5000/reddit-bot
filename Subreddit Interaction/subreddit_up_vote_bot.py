@@ -2,6 +2,7 @@ __author__ = 'tecnoman5000'
 
 import praw
 from time import sleep
+from os import name, system
 
 def voting_main(subreddit_name,bot_pass):
 	post_id = []
@@ -30,18 +31,23 @@ def voting_main(subreddit_name,bot_pass):
 	print('Pulling Information...')
 	subreddit_posts = subreddit.get_new(limit=100) # Connection to Reddit and hold information returned
 
-	print('Checking posts...')
+	print('Checking posts new posts in',subreddit_name,'...')
+
+	post_num = 0
 	for post in subreddit_posts:
+		print_out = str(post_num) + '%'
+		print(print_out, end='') # just print and flush
 		if not any(post.id in ids for ids in post_id): # Check to see if the id was previously up voted
 			## Interact with Submission
 			submission = r.get_submission(submission_id=post.id)
-			print('Up Voting... ID: ', post.id)
+			#print('Up Voting... ID: ', post.id)
 
 			submission.upvote()
 			with open('post_id_'+subreddit_name, 'a') as post_id_file: # Append to the bottom of the file the new post id
 				post_id_file.write(post.id+'\n')
-		else:
-			print('Post Already Up Voted, ID: ', post.id)
+		sleep(0.01)
+		print('\r' * len(print_out), end='') # use '\r' to go back
+		post_num += 1
 	print('Up Voting Finished!')
 
 user_input = str(input('Subreddit to up vote: '))
@@ -55,5 +61,6 @@ if str(input('Do you want recursive mode? (y/n)')) == 'y':
 		voting_main(user_input,input_password)
 		print('Waiting 1 minute till next check...')
 		sleep(60)
+		system('cls' if name == 'nt' else 'clear')  # Clear screen before use
 else:
 	voting_main(user_input,input_password)
