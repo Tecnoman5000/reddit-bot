@@ -5,7 +5,7 @@ from time import sleep
 from os import name, system
 import warnings
 
-def subreddit_up_vote(input_subreddit_name,bot_pass):
+def subreddit_up_vote(input_subreddit_name,bot_pass,category):
 	for subreddit_name in input_subreddit_name:
 		post_id = []
 
@@ -31,7 +31,12 @@ def subreddit_up_vote(input_subreddit_name,bot_pass):
 
 		### Get Submission
 		print('Pulling Information...')
-		subreddit_posts = subreddit.get_new(limit=100) # Connection to Reddit and hold information returned
+		if category == 'hot':
+			subreddit_posts = subreddit.get_hot(limit=100) # Connection to Reddit and hold information returned
+		elif category == 'top':
+			subreddit_posts = subreddit.get_top(limit=100) # Connection to Reddit and hold information returned
+		else:
+			subreddit_posts = subreddit.get_new(limit=100) # Connection to Reddit and hold information returned
 
 		print('Checking posts new posts in',subreddit_name,'...')
 
@@ -50,10 +55,10 @@ def subreddit_up_vote(input_subreddit_name,bot_pass):
 			sleep(0.01)
 			print('\r' * len(print_out), end='') # use '\r' to go back
 			post_num += 1
-	print('Up Voting Finished!')
+		print(subreddit_name,' Up Voting Finished!')
+	print(' Up Voting Finished!')
 
-def fxn():
-    warnings.warn("deprecated", DeprecationWarning)
+
 
 def voting_main():
 	user_input = [str(input('Subreddit to up vote: '))]
@@ -66,18 +71,21 @@ def voting_main():
 				user_input.append(line)
 			default_subreddits.close()
 
-
+	cat = str(input('Choose Categories for up voting (hot;new;top): '))
 	input_password =  str(input('Data Hoarding Bot password: '))
 	if str(input('Do you want recursive mode? (y/n)')) == 'y':
 		while 0 < 1:
-			subreddit_up_vote(user_input,input_password)
+			subreddit_up_vote(user_input,input_password,cat)
 			print('Waiting 1 minute till next check...')
 			sleep(60)
 			system('cls' if name == 'nt' else 'clear')  # Clear screen before use
 	else:
-		subreddit_up_vote(user_input,input_password)
+		subreddit_up_vote(user_input,input_password,cat)
 
 voting_main()
+
+def fxn():
+    warnings.warn("deprecated", DeprecationWarning)
 
 with warnings.catch_warnings(): # To fix the sys / resource warnings
 	warnings.simplefilter("ignore")
