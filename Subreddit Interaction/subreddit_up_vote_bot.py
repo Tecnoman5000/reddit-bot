@@ -56,7 +56,7 @@ def subreddit_up_vote(input_subreddit_name,bot_pass,category):
 			print('\r' * len(print_out), end='') # use '\r' to go back
 			post_num += 1
 		print(subreddit_name,' Up Voting Finished!')
-	print(' Up Voting Finished!')
+	print(subreddit_name,' Up Voting Finished!')
 
 
 
