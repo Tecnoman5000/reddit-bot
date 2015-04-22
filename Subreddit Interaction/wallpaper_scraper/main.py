@@ -75,12 +75,13 @@ def main(bot_pass):
             print('Ext: ', img_ext)
 
             image_name = name_format(single_submission.title, imgur_id, img_ext)
-            with open('/home/tecno/Scripts/wallpaper_scraper/saved/' + image_name, 'wb') as out:
+            with open('/home/tecno/Scripts/reddit-bot/Subreddit Interaction/wallpaper_scraper/saved/' + image_name,
+                      'wb') as out:
                 data = image.data
                 out.write(data)
                 img_dl += 1
             out.close()  # Close image file
-            image.headers['connection:close']
+            # image.headers['connection:close']
 
             with open('post_id_archive', 'a') as post_id_file:  # Append to the bottom of the file the new post id
                 post_id_file.write(submission.id + '\n')
@@ -204,7 +205,8 @@ def __init__():
             current_time = str(localtime()[3]) + ':' + str(localtime()[4]) + ':' + str(localtime()[5]) + ' - ' + str(
                 localtime()[2]) + '/' + str(localtime()[1]) + '/' + str(localtime()[0])
 
-            log_msg = current_time + ':: Total Images DL: ' + str(num_img_dl) + ' -- Total Times run: ' + str(times_run) + ' -- Recursive mode: ON'
+            log_msg = current_time + ':: Total Images DL: ' + str(num_img_dl) + ' -- Total Times run: ' + str(
+                times_run) + ' -- Recursive mode: ON'
             with open('ws_log', 'a') as ws_log:  # Append to the bottom of the file the new post id
                 ws_log.write(log_msg + '\n')
 
