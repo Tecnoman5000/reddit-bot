@@ -63,6 +63,7 @@ def main(bot_pass):
                 with open('bad_links', 'a') as bad_links_file:  # Append to the bottom of the file the new post id
                     bad_links_file.write(single_submission.title + ': ' + single_submission.url + '\n')
                 print('')
+                post_num += 1
                 continue
 
             imgur_id = get_id(url)
@@ -87,6 +88,9 @@ def main(bot_pass):
                 post_id_file.write(submission.id + '\n')
 
             print('')
+        else:
+            print(post_num + 1, '/100 : Post already downloaded! \r', end='')
+            sleep(0.1)
         post_num += 1
     return img_dl
 
@@ -195,22 +199,26 @@ def __init__():
             else:
                 run_time_unit = 'seconds'
 
-            print('Times run: ', times_run, ' -- Total Run Time: ', round(run_time, 0), ' ', run_time_unit,
-                  ' -- Total # of Images Downloaded: ', num_img_dl, sep='')
-
             num_img_dl += main(input_password)
+            times_run += 1
 
-            print('Waiting ', round(wait_time, 2), ' ', time_unit, ' till next check...')
+            sleep(5)
+            system('cls' if name == 'nt' else 'clear')  # Clear screen before use
 
             current_time = str(localtime()[3]) + ':' + str(localtime()[4]) + ':' + str(localtime()[5]) + ' - ' + str(
                 localtime()[2]) + '/' + str(localtime()[1]) + '/' + str(localtime()[0])
 
             log_msg = current_time + ':: Total Images DL: ' + str(num_img_dl) + ' -- Total Times run: ' + str(
                 times_run) + ' -- Recursive mode: ON'
+
             with open('ws_log', 'a') as ws_log:  # Append to the bottom of the file the new post id
                 ws_log.write(log_msg + '\n')
 
-            times_run += 1
+            print('Times run: ', times_run, ' -- Total Run Time: ', round(run_time, 0), ' ', run_time_unit,
+                  ' -- Total # of Images Downloaded: ', num_img_dl, sep='')
+
+            print('Waiting ', round(wait_time, 2), ' ', time_unit, ' till next check...')
+
             if time_unit == 'seconds':
                 sleep(wait_time)
             else:
