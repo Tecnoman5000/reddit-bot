@@ -39,12 +39,12 @@ def main(bot_pass):
     # continue
 
     try:
-        subreddit = r.get_subreddit('wallpaper')  # Get subreddit information
+        subreddit = r.get_subreddit('wallpapers')  # Get subreddit information
     except Exception as http_err:  # If the subreddit returns 404
         print(http_err)
         exit(0)
-
-    subreddit_posts = subreddit.get_new(limit=100)  # Pull post information
+    grab_limit = 200
+    subreddit_posts = subreddit.get_new(limit=grab_limit)  # Pull post information
 
     print('Checking for new wallpaper posts...')
     post_num = 0
@@ -54,7 +54,7 @@ def main(bot_pass):
         if not any(submission.id in ids for ids in post_id):  # Check to see if the id was previously up voted
             # Interact with Submission
             single_submission = r.get_submission(submission_id=submission.id)
-            print(post_num + 1, '/100 :', single_submission.title)
+            print(post_num + 1, '/', grab_limit, ' :', single_submission.title, sep='')
             # print(single_submission.url)
             url = link_format(single_submission.url)  # Grab submission link url
             if url == 'bad':
@@ -89,13 +89,25 @@ def main(bot_pass):
 
             print('')
         else:
-            print(post_num + 1, '/100 : Post already downloaded! \r', end='')
+            print(post_num + 1, '/', grab_limit, ': Post already downloaded! \r', end='', sep='')
             sleep(0.1)
         post_num += 1
     return img_dl
 
 
 def name_format(title, imgur_id, extension):
+    for ch in ['(', '{']:
+        if ch in title:
+            title = title.replace(ch, '[')
+    for ch in [')', '}']:
+        if ch in title:
+            title = title.replace(ch, ']')
+    title = title.replace('[OC]', '')
+
+    res_start = ''
+    res_finish = ''
+    res = ''
+
     if title.find('[') != -1:
         res_start = title.find('[')
     elif title.find('(') != -1:
@@ -104,14 +116,21 @@ def name_format(title, imgur_id, extension):
         res_finish = title.find(']')
     elif title.find(')') != -1:
         res_finish = title.find(')')
-    res = title[res_start:res_finish + 1]
-    if res != '' and (res.find('x') != -1 or res.find('X') != -1 or res.find('×') != -1):
-        res = res.strip()
-        res = res.replace("(", "[")
-        res = res.replace(")", "]")
-        img_name = imgur_id + ' ' + res + '.' + extension
+    if res_start != '' and res_finish != '':
+        res = title[res_start:res_finish + 1]
+        title = title[:res_start]
+        title = title.strip()
+        title = title.replace(" ", "_")
+
+    if len(title) <= 15:
+        img_title = title
     else:
-        img_name = imgur_id + '.' + extension
+        img_title = imgur_id
+
+    if res != '' and (res.find('x') != -1 or res.find('X') != -1 or res.find('×') != -1) and len(res) <= 12:
+        img_name = img_title + ' ' + res + '.' + extension
+    else:
+        img_name = img_title + '.' + extension
     print('Name: ', img_name)
     return img_name
 
