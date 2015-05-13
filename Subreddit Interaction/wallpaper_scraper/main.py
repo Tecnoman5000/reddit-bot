@@ -2,6 +2,7 @@ __author__ = 'tecnologic'
 
 import praw
 from time import sleep, time, localtime
+import datetime
 from os import name, system
 from sys import stdin
 import urllib3
@@ -102,7 +103,7 @@ def name_format(title, imgur_id, extension):
     for ch in [')', '}']:
         if ch in title:
             title = title.replace(ch, ']')
-    title = title.replace('[OC]', '')
+    title = title.replace('[OC]', '_OC_')
 
     res_start = ''
     res_finish = ''
@@ -235,8 +236,9 @@ def __init__():
 
             print('Times run: ', times_run, ' -- Total Run Time: ', round(run_time, 0), ' ', run_time_unit,
                   ' -- Total # of Images Downloaded: ', num_img_dl, sep='')
+            next_run_time = datetime.datetime.now() + datetime.timedelta(minutes=round(wait_time, 2))
 
-            print('Waiting ', round(wait_time, 2), ' ', time_unit, ' till next check...')
+            print('Waiting ', round(wait_time, 2), time_unit, '[', next_run_time, '] till next check...')
 
             if time_unit == 'seconds':
                 sleep(wait_time)
